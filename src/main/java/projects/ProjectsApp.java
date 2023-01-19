@@ -125,7 +125,7 @@ public class ProjectsApp {
 	 */
 	private int getUserSelection() {
 		printOperations();
-		Integer input = getIntInput("Enter menu selection: ");
+		Integer input = getIntInput("Enter menu selection");
 		
 		return Objects.isNull(input) ? -1 :input;
 	}
