@@ -21,19 +21,21 @@ public class ProjectService {
 	* @param project the {@link Project} object.
 	* @return The Project object with a generated key value.
 	*/
+	
+	//adds a project to the db
 	public Project addProject(Project project) {
 		
 		return projectDao.insertProject(project); 
 		
 	}
 
-
+	//Returns all projects from db
 	public List<Project> fetchAllProjects() {
 		
 		return projectDao.fetchAllProjects();
 	}
-
-
+	
+	//Returns the project based on project id
 	public Project fetchProjectById(Integer projectId) {
 		return projectDao.fetchByProjectId(projectId).orElseThrow(
 			   ()-> new NoSuchElementException(

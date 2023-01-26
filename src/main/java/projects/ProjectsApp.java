@@ -46,7 +46,6 @@ public class ProjectsApp {
 		while(!done) {
 			try{
 				int selection = getUserSelection();
-				
 
 				switch (selection) {
 				case -1:
@@ -65,18 +64,14 @@ public class ProjectsApp {
 					System.out.println("\n"+selection + " is invalid. Try again.");
 					break;
 
-				}
-				
-				
-			}catch(Exception e) {
+				}		
+			}
+			catch(Exception e) {
 				System.out.println("\nError: "+e+" please try again.");
 			}
 		}
 		
 	}
-	
-	
-	
 	private void selectProjects() {
 		listProjects();
 		Integer projectId = getIntInput("Please, select a valid project id");

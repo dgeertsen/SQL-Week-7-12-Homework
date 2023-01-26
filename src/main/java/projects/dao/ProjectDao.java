@@ -35,19 +35,29 @@ public class ProjectDao extends DaoBase {
 	 * @throws DbException if an error occurs when inserting into row.
 	 */
 
-	// Gets all projects from Db
+	//Gets all projects from db
 	public List<Project> fetchAllProjects() {
 		String sql = "SELECT * FROM " + PROJECT_TABLE + " ORDER BY project_name";
+		
+		//Get db Connection
 		try (Connection conn = DbConnection.getConnection()) {
 			startTransaction(conn);
+			
+			//Try sql statement
 			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+				
+				//Execute the sql statement
 				try (ResultSet rs = stmt.executeQuery()) {
+					
+					//Create list that holds all projects in db
 					List<Project> projects = new LinkedList<>();
 					while (rs.next()) {
 						projects.add(extract(rs, Project.class));
 					}
 					return projects;
-				} catch (Exception e) {
+				} 
+				//If it fails do not execute partial transaction 
+				catch (Exception e) {
 					rollbackTransaction(conn);
 					throw new DbException(e);
 				}
@@ -63,9 +73,12 @@ public class ProjectDao extends DaoBase {
 		String sql = "INSERT INTO " + PROJECT_TABLE + " "
 				+ "(project_name, estimated_hours, actual_hours, difficulty, notes) " + "VALUES " + "(?, ?, ?, ?, ?)";
 		// formatter:on'
-
+		
+		//Get db Connection
 		try (Connection conn = DbConnection.getConnection()) {
 			startTransaction(conn);
+			
+			//Try sql statement
 			try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 				setParameter(stmt, 1, project.getProjectName(), String.class);
 				setParameter(stmt, 2, project.getEstimatedHours(), BigDecimal.class);
@@ -73,15 +86,18 @@ public class ProjectDao extends DaoBase {
 				setParameter(stmt, 4, project.getDifficulty(), Integer.class);
 				setParameter(stmt, 5, project.getNotes(), String.class);
 
+				//Try to commit transaction
 				stmt.executeUpdate();
-
 				Integer projectId = getLastInsertId(conn, PROJECT_TABLE);
 				commitTransaction(conn);
 
 				project.setProjectId(projectId);
 				return project;
 
-			} catch (Exception e) {
+			} 
+			
+			//If it fails do not execute partial transaction
+			catch (Exception e) {
 				rollbackTransaction(conn);
 				throw new DbException(e);
 			}
@@ -92,11 +108,14 @@ public class ProjectDao extends DaoBase {
 
 	public Optional<Project> fetchByProjectId(Integer projectId) {
 		String sql = "SELECT * FROM "+PROJECT_TABLE+" WHERE project_id = ?";
+		
+		//Get db connection
 		try(Connection conn=DbConnection.getConnection()){
 			startTransaction(conn);
 			try {
 				Project project =null;
 				
+				//Exectue sql statement
 				try(PreparedStatement stmt=conn.prepareStatement(sql)){
 					setParameter(stmt,1,projectId,Integer.class);			
 					try(ResultSet rs =stmt.executeQuery()){
@@ -112,11 +131,13 @@ public class ProjectDao extends DaoBase {
 					project.getCategories().addAll(getchCategoriesForProject(conn,projectId));
 				}
 				
-				
+				//Return project info
 				commitTransaction(conn);
 				return Optional.ofNullable(project);
 			}
 			catch(Exception e) {
+				
+				//If it fails do not execute partial transaction
 				rollbackTransaction(conn);
 				throw new DbException(e);
 			}
@@ -135,6 +156,8 @@ public class ProjectDao extends DaoBase {
 				+"JOIN "+PROJECT_CATEGORY_TABLE+" pc USING (category_id)"
 				+"WHERE project_id = ? ";				
 		// @formatter:on
+		
+		//Exectue sql statement
 		try(PreparedStatement stmt=conn.prepareStatement(sql)){
 			setParameter(stmt,1,projectId,Integer.class);			
 			try(ResultSet rs =stmt.executeQuery()){
@@ -152,6 +175,8 @@ public class ProjectDao extends DaoBase {
 		String sql=""
 				+"SELECT * FROM "+STEP_TABLE+" WHERE project_id = ? ";				
 		// @formatter:on
+		
+		//Exectue sql statement
 		try(PreparedStatement stmt=conn.prepareStatement(sql)){
 			setParameter(stmt,1,projectId,Integer.class);			
 			try(ResultSet rs =stmt.executeQuery()){
@@ -169,6 +194,8 @@ public class ProjectDao extends DaoBase {
 		String sql=""
 				+"SELECT * FROM "+MATERIAL_TABLE+" WHERE project_id = ? ";				
 		// @formatter:on
+		
+		//Exectue sql statement
 		try(PreparedStatement stmt=conn.prepareStatement(sql)){
 			setParameter(stmt,1,projectId,Integer.class);			
 			try(ResultSet rs =stmt.executeQuery()){
