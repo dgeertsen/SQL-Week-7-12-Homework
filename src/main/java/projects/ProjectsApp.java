@@ -58,7 +58,7 @@ public class ProjectsApp {
 					listProjects();
 					break;
 				case 3:
-					selectProjects();
+					selectProject();
 					break;
 				default:
 					System.out.println("\n"+selection + " is invalid. Try again.");
@@ -67,12 +67,12 @@ public class ProjectsApp {
 				}		
 			}
 			catch(Exception e) {
-				System.out.println("\nError: "+e+" please try again.");
+				System.out.println("\nError: "+e+" Try again.");
 			}
 		}
 		
 	}
-	private void selectProjects() {
+	private void selectProject() {
 		listProjects();
 		Integer projectId = getIntInput("Please, select a valid project id");
 		
@@ -81,7 +81,6 @@ public class ProjectsApp {
 		
 		/*Throws a exception, if project id is ivalid */
 		curProject=projectService.fetchProjectById(projectId);
-		System.out.println(curProject);
 	}
 
 	private void listProjects() {
@@ -169,13 +168,13 @@ public class ProjectsApp {
 			return Integer.valueOf(input);
 		}
 		catch(NumberFormatException e) {
-			throw new DbException(input + " is not valid number");
+			throw new DbException(input + " is not valid number.");
 		}
 		
 	}
 
 	/**
-	 * PRints a prompt and gets user input
+	 * Prints a prompt and gets user input
 	 */
 	private String getStringInput(String prompt) {
 		System.out.print(prompt + ": ");
@@ -188,10 +187,15 @@ public class ProjectsApp {
 
 	//This method displays the menu selections
 	private void printOperations() {
-		System.out.println("\nThese are the available menu selections");
+		System.out.println("\nThese are the available menu selections\nPress the Enter key to quit:");
 		
 		//prints operations list
 		operations.forEach(line -> System.out.println("   "+line));
+		
+		if(Objects.isNull(curProject)) 
+			System.out.println("\nYou are not working with a project");
+		else
+			System.out.println("\nYou are working with project: "+curProject);
 	}
 	
 

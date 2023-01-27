@@ -128,7 +128,7 @@ public class ProjectDao extends DaoBase {
 				if(Objects.nonNull(conn)) {
 					project.getMaterials().addAll(fetchMaterialsForProject(conn,projectId));
 					project.getSteps().addAll(fetchStepsForProject(conn,projectId));
-					project.getCategories().addAll(getchCategoriesForProject(conn,projectId));
+					project.getCategories().addAll(fetchCategoriesForProject(conn,projectId));
 				}
 				
 				//Return project info
@@ -136,10 +136,9 @@ public class ProjectDao extends DaoBase {
 				return Optional.ofNullable(project);
 			}
 			catch(Exception e) {
-				
 				//If it fails do not execute partial transaction
 				rollbackTransaction(conn);
-				throw new DbException(e);
+				throw new DbException("Project with id="+projectId+ " does not exist.");
 			}
 			
 		}
@@ -149,7 +148,7 @@ public class ProjectDao extends DaoBase {
 		
 		}
 
-	private List<Category> getchCategoriesForProject(Connection conn, Integer projectId) throws SQLException {
+	private List<Category> fetchCategoriesForProject(Connection conn, Integer projectId) throws SQLException {
 		// @formatter:off
 		String sql=""
 				+"SELECT c.* FROM "+CATEGORY_TABLE+ " c "
