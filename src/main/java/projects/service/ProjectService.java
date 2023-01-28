@@ -38,7 +38,7 @@ public class ProjectService {
 	//Returns the project based on project id
 	public Project fetchProjectById(Integer projectId) {
 		return projectDao.fetchByProjectId(projectId).orElseThrow(()-> new NoSuchElementException(
-				"Project with id=" + projectId + " does not exist."));
+				"Project with id=" + projectId + " does not exist.\n"));
 	}
 
 

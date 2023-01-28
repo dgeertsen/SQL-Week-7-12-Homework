@@ -67,7 +67,7 @@ public class ProjectsApp {
 				}		
 			}
 			catch(Exception e) {
-				System.out.println("\nError: "+e+" Try again.");
+				System.out.println("\nError: "+e+"\nTry again");
 			}
 		}
 		
@@ -79,7 +79,7 @@ public class ProjectsApp {
 		/* Unselect the current project */
 		curProject = null;
 		
-		/*Throws a exception, if project id is ivalid */
+		/*Throw an exception, if project id is ivalid */
 		curProject=projectService.fetchProjectById(projectId);
 	}
 
