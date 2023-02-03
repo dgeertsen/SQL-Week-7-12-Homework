@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import projects.dao.ProjectDao;
 import projects.entity.Project;
+import projects.exception.DbException;
 
 //The service layer in this small application is implemented by a single file, 
 //ProjectService.java. Mostly this file acts as a pass-through between the 
@@ -39,6 +40,13 @@ public class ProjectService {
 	public Project fetchProjectById(Integer projectId) {
 		return projectDao.fetchByProjectId(projectId).orElseThrow(()-> new NoSuchElementException(
 				"Project with id=" + projectId + " does not exist.\n"));
+	}
+
+	public void modifyProjectDetails(Project project) {
+		if(!projectDao.modifyProjectDetails(project)) {
+			throw new DbException("Project with ID="+project.getProjectId()+ " does not exist.");
+		}
+		
 	}
 
 
