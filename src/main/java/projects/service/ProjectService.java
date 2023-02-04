@@ -43,8 +43,17 @@ public class ProjectService {
 	}
 
 	public void modifyProjectDetails(Project project) {
+		//Throw exception if update fails
 		if(!projectDao.modifyProjectDetails(project)) {
 			throw new DbException("Project with ID="+project.getProjectId()+ " does not exist.");
+		}
+		
+	}
+
+	public void deleteProject(Integer projectId) {
+		//Throw exception if delete fails
+		if(!projectDao.deleteProject(projectId)) {
+			throw new DbException("Project with ID="+projectId+ " does not exist.");
 		}
 		
 	}

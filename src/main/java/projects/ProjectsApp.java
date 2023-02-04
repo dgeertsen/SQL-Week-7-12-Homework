@@ -21,7 +21,8 @@ public class ProjectsApp {
 			"1) Add a project",
 			"2) List Projects",
 			"3) Select a Project",
-			"4) Update Project Details");
+			"4) Update Project Details",
+			"5) Delete a project");
 	// @formatter:on
 	
 	/**
@@ -64,6 +65,9 @@ public class ProjectsApp {
 				case 4: 
 					updateProjectDetails();
 					break;
+				case 5:
+					deleteProject();
+					break;
 				default:
 					System.out.println("\n"+selection + " is invalid. Try again.");
 					break;
@@ -71,25 +75,40 @@ public class ProjectsApp {
 				}		
 			}
 			catch(Exception e) {
-				System.out.println("\nError: "+e+"\nTry again");
+				System.out.println("\nError: "+e+" Try again");
 			}
 		}
 		
 	}
+	private void deleteProject() {
+		listProjects();
+		Integer projectId = getIntInput("Enter the id of the project you wish to delete");
+		
+		projectService.deleteProject(projectId);
+		
+		System.out.println("Project "+projectId+" was deleted succesfully.");
+		
+		//Check to see if curProject Id is = deleted project, if so set curProject to null
+		if(Objects.nonNull(curProject)&&curProject.getProjectId().equals(projectId))
+			curProject=null;
+		
+	}
+
 	private void updateProjectDetails() {
+		//Checks if current project is null
 		if(Objects.isNull(curProject)) {
 			System.out.println("Please select a project.");
 			return;
 		}
-		
+		//Get new info for project
 		String projectName = getStringInput("Enter the project name ["+curProject.getProjectName()+"]");
 		BigDecimal estimatedHours = getDecimalInput("Enter the project estimated hours ["+curProject.getEstimatedHours()+"]");
 		BigDecimal actualHours = getDecimalInput("Enter the project actual hours ["+curProject.getActualHours()+"]");
 		Integer difficulty = getIntInput("Enter the project difficulty ["+curProject.getDifficulty()+"]");
 		String notes = getStringInput("Enter the project notes ["+curProject.getNotes()+"]");
 		
+		//Create a new project object
 		Project project = new Project();
-		
 		project.setProjectId(curProject.getProjectId());
 		project.setProjectName(Objects.isNull(projectName)?curProject.getProjectName():projectName);
 		project.setEstimatedHours(Objects.isNull(estimatedHours)?curProject.getEstimatedHours():estimatedHours);
@@ -99,6 +118,7 @@ public class ProjectsApp {
 		
 		projectService.modifyProjectDetails(project);
 		
+		//Set curProject to the porject we just updated.
 		curProject=projectService.fetchProjectById(curProject.getProjectId());
 		
 	}

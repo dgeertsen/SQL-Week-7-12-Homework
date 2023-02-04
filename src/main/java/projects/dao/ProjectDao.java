@@ -221,9 +221,11 @@ public class ProjectDao extends DaoBase {
 				+"WHERE project_id = ? ";
 		// @forammter:on
 		
+		//Get db connection
 		try(Connection conn=DbConnection.getConnection()){
 			startTransaction(conn);
 			
+			//Exectue sql statement
 			try(PreparedStatement stmt = conn.prepareStatement(sql)){
 				setParameter(stmt, 1, project.getProjectName(), String.class);
 				setParameter(stmt, 2, project.getEstimatedHours(), BigDecimal.class);
@@ -231,12 +233,12 @@ public class ProjectDao extends DaoBase {
 				setParameter(stmt, 4, project.getDifficulty(), Integer.class);
 				setParameter(stmt, 5, project.getNotes(), String.class);
 				setParameter(stmt, 6, project.getProjectId(), Integer.class);
-				System.out.println("test A");
-				boolean modified=stmt.executeUpdate() == 1;
-				System.out.println("test b");
-				commitTransaction(conn);
 				
+				//Returns true if 1 row is modiied
+				boolean modified=stmt.executeUpdate() == 1;
+				commitTransaction(conn);
 				return modified;
+				
 			}catch(Exception e) {
 				rollbackTransaction(conn);
 				throw new DbException(e);
@@ -251,6 +253,37 @@ public class ProjectDao extends DaoBase {
 		
 		
 		
+		
+		
+	}
+
+
+
+	public boolean deleteProject(Integer projectId) {
+		String sql = "DELETE FROM "+PROJECT_TABLE+" WHERE project_id = ?";
+		
+		//Get db connection
+		try(Connection conn=DbConnection.getConnection()){
+			startTransaction(conn);
+			
+			//Exectue sql statement
+			try(PreparedStatement stmt = conn.prepareStatement(sql)){
+				setParameter(stmt, 1, projectId, Integer.class);
+				
+				//Returns true if 1 row is deleted
+				boolean deleted=stmt.executeUpdate()==1;
+				commitTransaction(conn);
+				return deleted;
+				
+			}catch(Exception e) {
+				rollbackTransaction(conn);
+				throw new DbException(e);
+			}
+			
+		} catch (SQLException e) {
+	
+			throw new DbException(e);
+		}
 		
 		
 	}
